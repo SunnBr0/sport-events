@@ -1,75 +1,16 @@
-# React + TypeScript + Vite
+# Sport Events
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+GitHub: https://github.com/SunnBr0/sport-events
 
-Currently, two official plugins are available:
+## Запуск
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+1. Установить зависимости: `pnpm install`
+2. Скопировать `.env.example` в `.env` и заполнить переменные окружения для API
+3. Запустить проект в dev-режиме: `pnpm run dev`
+4. Открыть локальный адрес, который покажет Vite в терминале
 
-## React Compiler
+## Архитектура
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+Проект построен на `React + TypeScript + Vite` и организован по слоям в стиле feature-sliced-подхода: `app`, `pages`, `widgets`, `features`, `entities`, `shared`. Верхний уровень `app` отвечает за роутинг, layout и провайдеры, `pages` собирают страницы из готовых блоков, `widgets` содержат крупные интерфейсные секции, а `features` инкапсулируют пользовательские сценарии, например фильтрацию событий.
 
-Note: This will impact Vite dev & build performances.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Данные календаря событий проходят через `EventsProvider`: он хранит фильтры, загружает список событий и отдаёт состояние через React Context. `entities` содержат типы и функции работы с доменной сущностью события, а `shared` используется для переиспользуемых UI-компонентов и базовых утилит. За счёт такого разделения UI, бизнес-логика и доступ к данным не смешиваются в одном месте, и проект проще расширять.
